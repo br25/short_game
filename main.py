@@ -15,11 +15,15 @@ SCREEN = pygame.display.set_mode((800,800))
 # Game Caption
 pygame.display.set_caption("Jumping mario")
 
+
 # Jumping variable
 jumping = False
 
 # Mario's middle position
 X_POSITION, Y_POSITION = 400, 660
+
+# Velocity for Movement
+X_VELOCITY, Y_VELOCITY = 5, 5
 
 # Gravity && Jump_Height && Velocity
 Y_GRAVITY = 1
@@ -44,8 +48,18 @@ while True:
     # key pressed
     keys_pressed = pygame.key.get_pressed()
 
-    if keys_pressed[pygame.K_SPACE]:
+    # Movement logic
+    if keys_pressed[pygame.K_RIGHT] or keys_pressed[pygame.K_d]:
+        X_POSITION = min(X_POSITION + X_VELOCITY, SCREEN.get_width() - STANDING_SURFACE.get_width() / 2)
+    if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_a]:
+        X_POSITION = max(X_POSITION - X_VELOCITY, STANDING_SURFACE.get_width() / 2)
+    if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_w] or keys_pressed[pygame.K_SPACE]:
         jumping = True
+    
+    # Boundary checking for Y_POSITION
+    Y_POSITION = max(Y_POSITION, STANDING_SURFACE.get_height() / 2)
+    Y_POSITION = min(Y_POSITION, SCREEN.get_height() - STANDING_SURFACE.get_height() / 2)
+    
 
     # Background picture set
     SCREEN.blit(BACKGROUND, (0,0))
