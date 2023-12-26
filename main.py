@@ -6,7 +6,6 @@ import sys
 # Pygame initiate
 pygame.init()
 
-
 # It controlled speed of the game
 CLOCK = pygame.time.Clock()
 
@@ -16,22 +15,22 @@ SCREEN = pygame.display.set_mode((800,800))
 # Game Caption
 pygame.display.set_caption("Jumping mario")
 
-
-
 # Jumping variable
 jumping = False
 
 # Mario's middle position
 X_POSITION, Y_POSITION = 400, 660
 
+# Gravity && Jump_Height && Velocity
+Y_GRAVITY = 1
+JUMP_HEIGHT = 20
+Y_VELOCITY = JUMP_HEIGHT
+
 
 # Images load and size defined
 STANDING_SURFACE = pygame.transform.scale(pygame.image.load("images/mario_standing.png"), (48, 64))
 JUMPING_SURFACE = pygame.transform.scale(pygame.image.load("images/mario_jumping.png"), (48, 64))
 BACKGROUND = pygame.image.load("images/background.png")
-
-# Rectangle around of Mario
-mario_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
 
 
 # Starting The game
@@ -41,10 +40,31 @@ while True:
             pygame.quit()
             sys.exit()
 
+    
+    # key pressed
+    keys_pressed = pygame.key.get_pressed()
+
+    if keys_pressed[pygame.K_SPACE]:
+        jumping = True
+
     # Background picture set
     SCREEN.blit(BACKGROUND, (0,0))
-    # Mario standing
-    SCREEN.blit(STANDING_SURFACE, mario_rect)
+
+    # Jumping logic
+    if jumping:
+        Y_POSITION -= Y_VELOCITY
+        Y_VELOCITY -= Y_GRAVITY
+        if Y_VELOCITY < -JUMP_HEIGHT:
+            jumping = False
+            Y_VELOCITY = JUMP_HEIGHT
+        # Rectangle around of Mario
+        mario_rect = JUMPING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
+        SCREEN.blit(JUMPING_SURFACE, mario_rect)
+    else:
+        # Rectangle around of Mario
+        mario_rect = STANDING_SURFACE.get_rect(center=(X_POSITION, Y_POSITION))
+        SCREEN.blit(STANDING_SURFACE, mario_rect)
+
 
     # pygame display updated
     pygame.display.update()
